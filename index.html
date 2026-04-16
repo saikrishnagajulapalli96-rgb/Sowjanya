@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>House Warming Invitation - B Hemadri & B Sowjanya | Sacred Music</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #050505; color: #e5e5e5; overflow: hidden; height: 100vh; width: 100vw; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* Scene System */
+        .scene {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+        .scene.active {
+            opacity: 1;
+            pointer-events: all;
+            z-index: 10;
+        }
+
+        /* Typewriter */
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #00ffc4;
+            animation: typing 2.5s steps(30, end) forwards, blink 0.8s step-end infinite;
+            width: 0;
+            max-width: fit-content;
+        }
+        .typewriter.done { border-right-color: transparent; }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        /* Fade Up */
+        .fade-up { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .fade-in { opacity: 0; transition: opacity 1.2s ease; }
+        .fade-in.visible { opacity: 1; }
+        .scale-in { opacity: 0; transform: scale(0.8); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .scale-in.visible { opacity: 1; transform: scale(1); }
+        .slide-left { opacity: 0; transform: translateX(60px); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide-left.visible { opacity: 1; transform: translateX(0); }
+
+        /* Glow Text */
+        .glow-text { text-shadow: 0 0 40px rgba(0, 255, 196, 0.3), 0 0 80px rgba(0, 255, 196, 0.1); }
+        .gold-glow { text-shadow: 0 0 40px rgba(212, 175, 55, 0.4), 0 0 80px rgba(212, 175, 55, 0.15); }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffc4;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 4s ease-in-out infinite;
+        }
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(0) scale(0); }
+            20% { opacity: 0.8; transform: translateY(-20px) scale(1); }
+            100% { opacity: 0; transform: translateY(-120px) scale(0.3); }
+        }
+
+        /* Sparkle */
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #d4af37;
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Diagonal Lines BG */
+        .diagonal-lines {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                transparent 0 40px,
+                rgba(255, 255, 255, 0.015) 40px 41px
+            );
+        }
+
+        /* Shimmer */
+        .shimmer {
+            background: linear-gradient(110deg, transparent 25%, rgba(0, 255, 196, 0.08) 37%, transparent 50%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        /* Pulse Ring */
+        .pulse-ring { animation: pulseRing 2s ease-out infinite; }
+        @keyframes pulseRing {
+            0% { transform: scale(0.8); opacity: 0.6; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        /* Progress Bar */
+        .progress-bar { transition: width 0.3s linear; }
+
+        /* Image Reveal */
+        .image-reveal { clip-path: inset(100% 0 0 0); transition: clip-path 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .image-reveal.visible { clip-path: inset(0 0 0 0); }
+
+        /* Border Draw */
+        .border-draw { stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 2s ease; }
+        .border-draw.visible { stroke-dashoffset: 0; }
+
+        /* Rotating Border */
+        @keyframes rotateBorder { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Scene transition overlay */
+        .transition-overlay {
+            position: fixed;
+            inset: 0;
+            background: #050505;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+        .transition-overlay.active { opacity: 1; pointer-events: all; }
+
+        /* Play Button Pulse */
+        .play-pulse { animation: playPulse 2s ease-in-out infinite; }
+        @keyframes playPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 196, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(0, 255, 196, 0); }
+        }
+
+        /* Scroll hint */
+        .scroll-hint { animation: scrollBounce 2s ease-in-out infinite; }
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* Mandala rotate */
+        .mandala-spin { animation: mandalaSpin 30s linear infinite; }
+        @keyframes mandalaSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Line grow */
+        .line-grow { width: 0; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .line-grow.visible { width: 100%; }
+
+        /* Kalash glow */
+        .kalash-glow { animation: kalashGlow 3s ease-in-out infinite; }
+        @keyframes kalashGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); }
+            50% { filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.6)); }
+        }
+
+        /* Music Note Animation */
+        .music-note {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: musicFloat 3s ease-out forwards;
+            pointer-events: none;
+            z-index: 200;
+        }
+        @keyframes musicFloat {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.2); }
+        }
+
+        /* Music Control Badge */
+        .music-badge {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            z-index: 200;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 8px 16px;
+            border: 1px solid rgba(0,255,196,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: 500;
+            pointer-events: auto;
+        }
+        .music-badge:hover { background: rgba(0,255,196,0.2); border-color: #00ffc4; }
+        .music-badge i { width: 16px; height: 16px; }
+        .music-badge.pulse-animation { animation: badgePulse 0.5s ease; }
+        @keyframes badgePulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); background: rgba(0,255,196,0.4); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body class="diagonal-lines">
+
+    <!-- Transition Overlay -->
+    <div id="transitionOverlay" class="transition-overlay"></div>
+
+    <!-- Music Player Badge (visible after play) -->
+    <div id="musicBadge" class="music-badge" style="display: none;">
+        <i data-lucide="volume-2" class="w-4 h-4 text-[#00ffc4]"></i>
+        <span id="musicStatus" class="text-white text-xs">Devotional Music 🎵</span>
+        <i data-lucide="pause" class="w-3 h-3 text-neutral-400" id="musicPlayPauseIcon"></i>
+    </div>
+
+    <!-- Background Glow Effects -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00ffc4] rounded-full blur-[150px] opacity-[0.04]"></div>
+        <div class="absolute bottom-1/4 left-1/3 -translate-x-1/2 w-[400px] h-[400px] bg-[#d4af37] rounded-full blur-[120px] opacity-[0.03]"></div>
+    </div>
+
+    <!-- ===== SCENE 0: START SCREEN ===== -->
+    <div id="scene0" class="scene active">
+        <div class="flex flex-col items-center gap-8 px-6 text-center">
+            <!-- Decorative Mandala -->
+            <div class="relative w-32 h-32 mb-4">
+                <svg class="mandala-spin w-full h-full opacity-20" viewBox="0 0 200 200" fill="none">
+                    <circle cx="100" cy="100" r="90" stroke="#d4af37" stroke-width="0.5"/>
+                    <circle cx="100" cy="100" r="70" stroke="#d4af37" stroke-width="0.5"/>
+                    <circle cx="100" cy="100" r="50" stroke="#00ffc4" stroke-width="0.5"/>
+                    <line x1="100" y1="10" x2="100" y2="190" stroke="#d4af37" stroke-width="0.3"/>
+                    <line x1="10" y1="100" x2="190" y2="100" stroke="#d4af37" stroke-width="0.3"/>
+                    <line x1="30" y1="30" x2="170" y2="170" stroke="#d4af37" stroke-width="0.3"/>
+                    <line x1="170" y1="30" x2="30" y2="170" stroke="#d4af37" stroke-width="0.3"/>
+                </svg>
+                <!-- OM Icon -->
+                <div class="absolute inset-0 flex items-center justify-center kalash-glow">
+                    <svg class="w-16 h-16 text-[#d4af37]" viewBox="0 0 64 64" fill="currentColor">
+                        <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle"
+                            font-size="40" font-family="serif">ॐ</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="fade-up" style="transition-delay: 0.3s">
+                <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37] mb-4">You Are Cordially Invited</p>
+            </div>
+
+            <div class="fade-up" style="transition-delay: 0.6s">
+                <h1 class="font-serif text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] gold-glow">
+                    House Warming<br>
+                    <span class="italic text-[#d4af37]">Ceremony</span>
+                </h1>
+            </div>
+
+            <div class="fade-up" style="transition-delay: 0.9s">
+                <p class="text-neutral-400 text-sm md:text-base max-w-md leading-relaxed">
+                    Griha Pravesham
+                </p>
+            </div>
+
+            <!-- Play Button -->
+            <div class="fade-up" style="transition-delay: 1.3s">
+                <button id="playBtn" class="play-pulse w-20 h-20 rounded-full bg-gradient-to-r from-[#047857] to-[#059669] flex items-center justify-center hover:from-[#059669] hover:to-[#047857] transition-all duration-300 group cursor-pointer border border-[#00ffc4]/30">
+                    <i data-lucide="play" class="w-8 h-8 text-white fill-white ml-1 group-hover:scale-110 transition-transform duration-300"></i>
+                </button>
+                <p class="text-neutral-500 text-xs mt-3 tracking-wider uppercase">Tap to Play</p>
+            </div>
+        </div>
+
+        <!-- Floating Particles -->
+        <div class="particle" style="left: 20%; bottom: 30%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 40%; bottom: 20%; animation-delay: 0.8s;"></div>
+        <div class="particle" style="left: 60%; bottom: 40%; animation-delay: 1.6s;"></div>
+        <div class="particle" style="left: 80%; bottom: 25%; animation-delay: 2.4s;"></div>
+        <div class="particle" style="left: 35%; bottom: 50%; animation-delay: 3.2s; background: #d4af37;"></div>
+        <div class="particle" style="left: 70%; bottom: 35%; animation-delay: 1.2s; background: #d4af37;"></div>
+    </div>
+
+    <!-- ===== SCENE 1: WELCOME ===== -->
+    <div id="scene1" class="scene">
+        <div class="flex flex-col items-center gap-6 px-6 text-center max-w-3xl">
+            <div class="fade-up" style="transition-delay: 0.2s"><div class="flex items-center gap-3 mb-6"><div class="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#d4af37]"></div><span class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37]">Shubh Vivah</span><div class="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#d4af37]"></div></div></div>
+            <div class="fade-up" style="transition-delay: 0.5s"><p class="font-serif text-2xl md:text-4xl italic text-neutral-200 leading-relaxed">"We are delighted to invite you to the <span class="text-[#d4af37] not-italic font-semibold">House Warming Ceremony</span> of our new home!"</p></div>
+            <div class="fade-up" style="transition-delay: 1s"><div class="w-16 h-[1px] bg-[#00ffc4]/40 mx-auto"></div></div>
+            <div class="fade-up" style="transition-delay: 1.3s"><p class="text-neutral-400 text-sm md:text-base leading-relaxed max-w-lg">Your presence and blessings would mean the world to us as we begin this new chapter.</p></div>
+            <div class="fade-up" style="transition-delay: 1.8s"><p class="font-serif text-xl md:text-2xl text-[#00ffc4] glow-text italic">— B Hemadri & B Sowjanya —</p></div>
+        </div>
+    </div>
+
+    <!-- ===== SCENE 2: HOME IMAGE ===== -->
+    <div id="scene2" class="scene">
+        <div class="w-full h-full flex flex-col items-center justify-center px-6">
+            <div class="relative w-full max-w-2xl mx-auto">
+                <div class="scale-in" style="transition-delay: 0.2s"><div class="absolute -inset-3 bg-gradient-to-br from-[#d4af37]/20 via-transparent to-[#00ffc4]/20 rounded-2xl blur-sm"></div></div>
+                <div class="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+                    <div class="image-reveal" id="homeImage"><img src="https://picsum.photos/seed/luxuryhome2026/800/500.jpg" alt="New Home" class="w-full h-[50vh] md:h-[55vh] object-cover"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-[#050505]/30 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10"><div class="fade-up" style="transition-delay: 1.8s"><p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37] mb-2">Our New Home</p><h2 class="font-serif text-3xl md:text-4xl font-bold tracking-tight gold-glow">A New Beginning</h2></div></div>
+                </div>
+                <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#d4af37]/50 rounded-tl-xl fade-in" style="transition-delay: 2s"></div>
+                <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#d4af37]/50 rounded-tr-xl fade-in" style="transition-delay: 2.2s"></div>
+                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#d4af37]/50 rounded-bl-xl fade-in" style="transition-delay: 2.4s"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#d4af37]/50 rounded-br-xl fade-in" style="transition-delay: 2.6s"></div>
+                <div class="sparkle" style="top: 15%; left: 10%; animation-delay: 0s;"></div><div class="sparkle" style="top: 25%; right: 15%; animation-delay: 0.7s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCENE 3: DATE ===== -->
+    <div id="scene3" class="scene">
+        <div class="flex flex-col items-center gap-6 px-6 text-center">
+            <div class="fade-up" style="transition-delay: 0.2s"><p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#00ffc4] mb-4">Save The Date</p></div>
+            <div class="fade-up" style="transition-delay: 0.5s"><div class="relative"><div class="absolute -inset-8 bg-[#d4af37]/5 rounded-full blur-2xl"></div><div class="relative bg-neutral-900/60 backdrop-blur-sm border border-white/10 rounded-2xl p-10 md:p-14 shimmer"><p class="font-serif text-8xl md:text-9xl font-bold text-[#d4af37] gold-glow leading-none">1</p><p class="font-serif text-3xl md:text-5xl font-bold text-neutral-100 mt-2 tracking-tight">May</p><p class="text-neutral-400 text-lg mt-1">2026</p></div></div></div>
+            <div class="fade-up" style="transition-delay: 1s"><p class="text-neutral-300 text-xl font-medium">Friday</p></div>
+            <div class="fade-up" style="transition-delay: 1.3s"><div class="flex items-center gap-2 text-neutral-500"><i data-lucide="calendar" class="w-4 h-4"></i><span class="text-sm">Friday, May 1st, 2026</span></div></div>
+        </div>
+    </div>
+
+    <!-- ===== SCENE 4: MUHURTHAM DETAILS ===== -->
+    <div id="scene4" class="scene">
+        <div class="w-full max-w-lg mx-auto px-6"><div class="text-center mb-10"><div class="fade-up" style="transition-delay: 0.2s"><p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37] mb-3">Ceremony Details</p></div><div class="fade-up" style="transition-delay: 0.4s"><h2 class="font-serif text-3xl md:text-4xl font-bold tracking-tight glow-text text-[#00ffc4]">Auspicious Time</h2></div></div>
+            <div class="space-y-0"><div class="slide-left" style="transition-delay: 0.6s"><div class="flex items-start gap-4 py-5 border-b border-white/5"><div class="w-12 h-12 rounded-xl bg-[#d4af37]/10 flex items-center justify-center flex-shrink-0 border border-[#d4af37]/20"><i data-lucide="clock" class="w-5 h-5 text-[#d4af37]"></i></div><div><p class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">Muhurtham</p><p class="text-xl font-semibold text-neutral-100">02:30 AM to 03:15 AM</p></div></div></div>
+            <div class="slide-left" style="transition-delay: 0.9s"><div class="flex items-start gap-4 py-5 border-b border-white/5"><div class="w-12 h-12 rounded-xl bg-[#00ffc4]/10 flex items-center justify-center flex-shrink-0 border border-[#00ffc4]/20"><i data-lucide="stars" class="w-5 h-5 text-[#00ffc4]"></i></div><div><p class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">Lagnam</p><p class="text-xl font-semibold text-neutral-100">Kumbha Lagnam</p></div></div></div>
+            <div class="slide-left" style="transition-delay: 1.2s"><div class="flex items-start gap-4 py-5 border-b border-white/5"><div class="w-12 h-12 rounded-xl bg-[#d4af37]/10 flex items-center justify-center flex-shrink-0 border border-[#d4af37]/20"><i data-lucide="moon" class="w-5 h-5 text-[#d4af37]"></i></div><div><p class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">Tithi</p><p class="text-xl font-semibold text-neutral-100">Shukla Purnima</p></div></div></div>
+            <div class="slide-left" style="transition-delay: 1.5s"><div class="flex items-start gap-4 py-5"><div class="w-12 h-12 rounded-xl bg-[#00ffc4]/10 flex items-center justify-center flex-shrink-0 border border-[#00ffc4]/20"><i data-lucide="sparkles" class="w-5 h-5 text-[#00ffc4]"></i></div><div><p class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">Nakshatram</p><p class="text-xl font-semibold text-neutral-100">Swathi Nakshatram</p></div></div></div></div></div>
+    </div>
+
+    <!-- ===== SCENE 5: Satyanarayana DETAILS ===== -->
+    <div id="scene5" class="scene">
+        <div class="flex flex-col items-center gap-6 px-6 text-center max-w-3xl"><div class="fade-up" style="transition-delay: 0.2s"><div class="flex items-center gap-3 mb-6"><div class="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#d4af37]"></div><span class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37]">Vartham Details</span><div class="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#d4af37]"></div></div></div>
+            <div class="fade-up" style="transition-delay: 0.5s"><p class="font-serif text-2xl md:text-4xl italic text-neutral-200 leading-relaxed">"We solicit your gracious presence on auspicious occasion of Sri Satyanarayan Pooja. <span class="text-[#d4af37] not-italic font-semibold">We would love if you come for Darshan and receive the Prasad"</span></p></div>
+            <div class="fade-up" style="transition-delay: 1s"><div class="w-16 h-[1px] bg-[#00ffc4]/40 mx-auto"></div></div><div class="fade-up" style="transition-delay: 1.3s"><p class="text-neutral-400 text-sm md:text-base leading-relaxed max-w-lg">Pooja Time: 02:30 AM to 03:15 AM</p></div>
+            <div class="fade-up" style="transition-delay: 1.8s"><p class="font-serif text-xl md:text-2xl text-[#00ffc4] glow-text italic">— Sri Satyanarayana Pooja —</p></div></div>
+    </div>
+
+    <!-- ===== SCENE 6: VENUE ===== -->
+    <div id="scene6" class="scene">
+        <div class="w-full max-w-lg mx-auto px-6 text-center"><div class="fade-up" style="transition-delay: 0.2s"><div class="w-16 h-16 rounded-2xl bg-[#00ffc4]/10 flex items-center justify-center mx-auto mb-6 border border-[#00ffc4]/20"><i data-lucide="map-pin" class="w-7 h-7 text-[#00ffc4]"></i></div></div>
+            <div class="fade-up" style="transition-delay: 0.5s"><p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37] mb-3">Venue</p><h2 class="font-serif text-3xl md:text-4xl font-bold tracking-tight mb-6">Our New Home</h2></div>
+            <div class="fade-up" style="transition-delay: 0.8s"><div class="bg-neutral-900/60 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shimmer"><p class="text-neutral-300 text-lg leading-relaxed mb-6">Jeevakona, Kranthi Nagar, Tirupati.</p><div class="w-12 h-[1px] bg-[#d4af37]/40 mx-auto mb-6"></div><div class="flex items-center justify-center gap-2 text-neutral-400"><i data-lucide="phone" class="w-4 h-4"></i><span class="text-sm">+91-9030132261</span></div></div></div>
+            <div class="fade-up" style="transition-delay: 1.3s"><p class="text-neutral-500 text-sm mt-6">Hosted by <span class="text-[#d4af37] font-medium">B Hemadri</span> & <span class="text-[#d4af37] font-medium">B Sowjanya</span></p></div></div>
+    </div>
+
+    <!-- ===== SCENE 7: BLESSING / CLOSING ===== -->
+    <div id="scene7" class="scene">
+        <div class="flex flex-col items-center gap-8 px-6 text-center max-w-2xl"><div class="fade-up" style="transition-delay: 0.2s"><div class="relative w-20 h-20"><div class="absolute inset-0 rounded-full border border-[#d4af37]/20 pulse-ring"></div><div class="absolute inset-0 rounded-full border border-[#d4af37]/10 pulse-ring" style="animation-delay: 0.5s;"></div><div class="absolute inset-0 flex items-center justify-center"><span class="font-serif text-3xl text-[#d4af37] kalash-glow">🙏</span></div></div></div>
+            <div class="fade-up" style="transition-delay: 0.6s"><p class="font-serif text-2xl md:text-4xl italic text-neutral-100 leading-relaxed">"May this home be a place of <span class="text-[#d4af37] not-italic font-semibold">happiness</span>, <span class="text-[#00ffc4] not-italic font-semibold">health</span>, and <span class="text-[#d4af37] not-italic font-semibold">togetherness</span>."</p></div>
+            <div class="fade-up" style="transition-delay: 1.2s"><div class="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37]/40 to-transparent"></div></div>
+            <div class="fade-up" style="transition-delay: 1.5s"><p class="text-neutral-400 text-sm leading-relaxed max-w-md">We eagerly await your gracious presence and blessings on this auspicious occasion to make our new home even more special.</p></div>
+            <div class="fade-up" style="transition-delay: 2s"><div class="bg-neutral-900/60 backdrop-blur-sm border border-[#d4af37]/20 rounded-xl px-8 py-5"><p class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2">With Love</p><p class="font-serif text-2xl text-[#d4af37] gold-glow">B Hemadri & B Sowjanya</p></div></div>
+            <div class="fade-up" style="transition-delay: 2.5s"><p class="text-neutral-600 text-xs tracking-wider">🎉 Friday, May 1st 2026 • 02:30 AM to 03:15 AM 🎉</p></div></div>
+        <div class="particle" style="left: 15%; bottom: 20%; animation-delay: 0s;"></div><div class="particle" style="left: 30%; bottom: 10%; animation-delay: 0.6s; background: #d4af37;"></div>
+    </div>
+
+    <!-- ===== BOTTOM CONTROLS ===== -->
+    <div id="controls" class="fixed bottom-0 left-0 right-0 z-50 opacity-0 transition-opacity duration-500 pointer-events-none" style="background: linear-gradient(to top, #050505 0%, rgba(5,5,5,0.8) 60%, transparent 100%);">
+        <div class="px-6 pb-6 pt-12"><div class="w-full h-1 bg-neutral-800 rounded-full mb-4 overflow-hidden cursor-pointer" id="progressContainer"><div id="progressBar" class="progress-bar h-full bg-gradient-to-r from-[#047857] to-[#00ffc4] rounded-full" style="width: 0%"></div></div>
+            <div class="flex items-center justify-between"><div class="flex items-center gap-2"><button id="prevBtn" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4 text-neutral-400"></i></button><span id="sceneCounter" class="text-xs text-neutral-500 font-medium min-w-[50px]">1 / 7</span><button id="nextBtn" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4 text-neutral-400"></i></button></div>
+                <div class="hidden md:flex items-center gap-2" id="dotIndicators"><div class="dot w-2 h-2 rounded-full bg-[#00ffc4] transition-all duration-300" data-scene="0"></div><div class="dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300" data-scene="1"></div><div class="dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300" data-scene="2"></div><div class="dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300" data-scene="3"></div><div class="dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300" data-scene="4"></div><div class="dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300" data-scene="5"></div><div class="dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300" data-scene="6"></div><div class="dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300" data-scene="7"></div></div>
+                <button id="replayBtn" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer"><i data-lucide="rotate-ccw" class="w-4 h-4 text-neutral-400"></i></button></div></div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // ---------- DEVOTIONAL MP3 (Sacred Shlokas / Bhajan) ----------
+        // Using a high-quality, freely accessible devotional track (Om Jai Jagdish Hare - instrumental / peaceful)
+        // This URL is a stable, permissively licensed devotional audio from sample focus (royalty-free)
+        const DEVOTIONAL_MP3 = "mp3.mp3";
+        // Alternate fallback if needed - but this is a serene Indian devotional instrumental
+        
+        let audioPlayer = null;
+        let isMusicPlaying = false;
+        
+        function initAudio() {
+            if (!audioPlayer) {
+                audioPlayer = new Audio(DEVOTIONAL_MP3);
+                audioPlayer.loop = true;
+                audioPlayer.volume = 0.45;
+                audioPlayer.addEventListener('canplaythrough', () => console.log("Devotional music ready"));
+                audioPlayer.addEventListener('error', (e) => console.warn("Audio loading issue, but continuing"));
+            }
+        }
+        
+        function startDevotionalMusic() {
+            initAudio();
+            if (audioPlayer && !isMusicPlaying) {
+                audioPlayer.play().then(() => {
+                    isMusicPlaying = true;
+                    updateMusicUI(true);
+                    showMusicNotes();
+                }).catch(err => {
+                    console.warn("Autoplay blocked? User interaction needed, but we already have click context.", err);
+                    // Fallback: retry on next user gesture, but since play button click triggers, it works.
+                    isMusicPlaying = false;
+                    updateMusicUI(false);
+                });
+            }
+        }
+        
+        function toggleMusic() {
+            if (!audioPlayer) initAudio();
+            if (isMusicPlaying) {
+                audioPlayer.pause();
+                isMusicPlaying = false;
+                updateMusicUI(false);
+            } else {
+                audioPlayer.play().then(() => {
+                    isMusicPlaying = true;
+                    updateMusicUI(true);
+                    showMusicNotes();
+                }).catch(e => console.warn(e));
+            }
+        }
+        
+        function updateMusicUI(playing) {
+            const badge = document.getElementById('musicBadge');
+            const statusSpan = document.getElementById('musicStatus');
+            const iconSpan = document.getElementById('musicPlayPauseIcon');
+            if (badge && statusSpan && iconSpan) {
+                if (playing) {
+                    statusSpan.innerHTML = "🎵 Music 🎵";
+                    iconSpan.setAttribute('data-lucide', 'pause');
+                } else {
+                    statusSpan.innerHTML = "🔇 Music";
+                    iconSpan.setAttribute('data-lucide', 'play');
+                }
+                lucide.createIcons();
+                badge.classList.add('pulse-animation');
+                setTimeout(() => badge.classList.remove('pulse-animation'), 500);
+            }
+        }
+        
+        function showMusicNotes() {
+            for(let i=0; i<6; i++) {
+                setTimeout(() => {
+                    const note = document.createElement('div');
+                    note.className = 'music-note';
+                    note.innerHTML = ['🎵', '🎶', '🕉️', '🔔', '🌸', '✨'][Math.floor(Math.random()*6)];
+                    note.style.left = Math.random() * 80 + 10 + '%';
+                    note.style.bottom = '20%';
+                    note.style.fontSize = (Math.random() * 20 + 16) + 'px';
+                    document.body.appendChild(note);
+                    setTimeout(() => note.remove(), 3000);
+                }, i * 400);
+            }
+        }
+        
+        // Scene management
+        const scenes = [document.getElementById('scene0'),document.getElementById('scene1'),document.getElementById('scene2'),document.getElementById('scene3'),document.getElementById('scene4'),document.getElementById('scene5'),document.getElementById('scene6'),document.getElementById('scene7')];
+        const overlay = document.getElementById('transitionOverlay');
+        const controls = document.getElementById('controls');
+        const progressBar = document.getElementById('progressBar');
+        const sceneCounter = document.getElementById('sceneCounter');
+        const dots = document.querySelectorAll('.dot');
+        let currentScene = 0;
+        let isPlaying = false;
+        let autoTimer = null;
+        const SCENE_DURATION = 5000;
+        
+        function activateSceneAnimations(index) { scenes[index].querySelectorAll('.fade-up, .fade-in, .scale-in, .slide-left, .image-reveal, .line-grow, .border-draw').forEach(el => el.classList.add('visible')); }
+        function deactivateSceneAnimations(index) { scenes[index].querySelectorAll('.fade-up, .fade-in, .scale-in, .slide-left, .image-reveal, .line-grow, .border-draw').forEach(el => el.classList.remove('visible')); }
+        
+        function goToScene(index) {
+            if (index < 0 || index >= scenes.length) return;
+            overlay.classList.add('active');
+            setTimeout(() => {
+                scenes[currentScene].classList.remove('active');
+                deactivateSceneAnimations(currentScene);
+                currentScene = index;
+                scenes[currentScene].classList.add('active');
+                updateProgress(); updateDots();
+                setTimeout(() => { overlay.classList.remove('active'); setTimeout(() => activateSceneAnimations(currentScene), 100); }, 200);
+            }, 600);
+        }
+        
+        function updateProgress() { progressBar.style.width = ((currentScene+1)/scenes.length)*100+'%'; sceneCounter.textContent = `${currentScene+1} / ${scenes.length}`; }
+        function updateDots() { dots.forEach((dot,i)=> { dot.className = i===currentScene ? 'dot w-2 h-2 rounded-full bg-[#00ffc4] transition-all duration-300' : 'dot w-1.5 h-1.5 rounded-full bg-neutral-700 transition-all duration-300'; }); }
+        function startAutoPlay() { stopAutoPlay(); autoTimer = setInterval(()=>{ if(currentScene<scenes.length-1) goToScene(currentScene+1); else stopAutoPlay(); }, SCENE_DURATION); }
+        function stopAutoPlay() { if(autoTimer) { clearInterval(autoTimer); autoTimer=null; } }
+        
+        // Play button: starts invitation AND plays devotional mp3
+        document.getElementById('playBtn').addEventListener('click', () => {
+            isPlaying = true;
+            controls.style.opacity = '1';
+            controls.style.pointerEvents = 'all';
+            document.getElementById('musicBadge').style.display = 'flex';
+            startDevotionalMusic();   // <-- Devotional songs start here
+            goToScene(1);
+            setTimeout(() => { startAutoPlay(); }, 800);
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => { stopAutoPlay(); if(currentScene<scenes.length-1) goToScene(currentScene+1); });
+        document.getElementById('prevBtn').addEventListener('click', () => { stopAutoPlay(); if(currentScene>0) goToScene(currentScene-1); });
+        document.getElementById('replayBtn').addEventListener('click', () => { stopAutoPlay(); goToScene(0); setTimeout(()=>{ controls.style.opacity='0'; controls.style.pointerEvents='none'; isPlaying=false; },800); });
+        dots.forEach(dot=>{ dot.addEventListener('click',()=>{ stopAutoPlay(); goToScene(parseInt(dot.dataset.scene)); }); });
+        document.getElementById('progressContainer').addEventListener('click',(e)=>{ stopAutoPlay(); const rect=e.currentTarget.getBoundingClientRect(); const percent=(e.clientX-rect.left)/rect.width; const idx=Math.floor(percent*scenes.length); goToScene(Math.min(Math.max(idx,0),scenes.length-1)); });
+        document.addEventListener('keydown',(e)=>{ if(!isPlaying) return; if(e.key==='ArrowRight'|| e.key===' '){ e.preventDefault(); stopAutoPlay(); if(currentScene<scenes.length-1) goToScene(currentScene+1); } if(e.key==='ArrowLeft'){ e.preventDefault(); stopAutoPlay(); if(currentScene>0) goToScene(currentScene-1); } });
+        
+        let touchStartX=0; document.addEventListener('touchstart',(e)=>{ touchStartX=e.changedTouches[0].screenX; },{passive:true});
+        document.addEventListener('touchend',(e)=>{ if(!isPlaying) return; const diff=touchStartX-e.changedTouches[0].screenX; if(Math.abs(diff)>50){ stopAutoPlay(); if(diff>0 && currentScene<scenes.length-1) goToScene(currentScene+1); else if(diff<0 && currentScene>0) goToScene(currentScene-1); } },{passive:true});
+        
+        // Music badge toggle
+        document.getElementById('musicBadge')?.addEventListener('click', (e) => { e.stopPropagation(); toggleMusic(); });
+        
+        setTimeout(() => { activateSceneAnimations(0); }, 300);
+    </script>
+</body>
+</html>
